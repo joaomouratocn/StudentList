@@ -7,22 +7,19 @@ import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.studentlist.R;
-import com.example.studentlist.dao.StudentDAO;
 import com.example.studentlist.model.Student;
+import com.example.studentlist.ui.ListStudentView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class ListStudentActivity extends AppCompatActivity {
     private static final String TITLE_APPBAR = "Student List";
-    private final StudentDAO studentDAO = new StudentDAO();
-    private ArrayAdapter<Student> adapter;
+    private final ListStudentView listStudentView = new ListStudentView(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,8 +28,6 @@ public class ListStudentActivity extends AppCompatActivity {
         setTitle(TITLE_APPBAR);
         configureFabNewStudent();
         configureList();
-//        studentDAO.saveStudent(new Student("João Mourato", "16991376210", "joaoubamit@gmail.com"));
-//        studentDAO.saveStudent(new Student("Arthur Henrique", "16997321066", "arthurh@gmail.com"));
     }
 
     @Override
@@ -45,10 +40,7 @@ public class ListStudentActivity extends AppCompatActivity {
     public boolean onContextItemSelected(@NonNull MenuItem item) {
         int itemId = item.getItemId();
         if (itemId == R.id.act_list_student_item_menu_remove){
-            AdapterView.AdapterContextMenuInfo menuInfo =
-                    (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-            Student studentSelect = adapter.getItem(menuInfo.position);
-            removeStudent(studentSelect);
+            listStudentView.confirmRemove(item);
         }
         return super.onContextItemSelected(item);
     }
@@ -56,12 +48,7 @@ public class ListStudentActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        updateStudents();
-    }
-
-    private void updateStudents() {
-        adapter.clear();
-        adapter.addAll(studentDAO.getAll());
+        listStudentView.updateStudents();
     }
 
     private void configureFabNewStudent() {
@@ -74,20 +61,10 @@ public class ListStudentActivity extends AppCompatActivity {
     }
 
     private void configureList() {
-        ListView listStudent = findViewById(R.id.listv_student);
-        configAdapter(listStudent);
+        ListView listStudent = findViewById(R.id.list_student);
+        listStudentView.configAdapter(listStudent);
         configItemClickList(listStudent);
         registerForContextMenu(listStudent);
-    }
-
-    private void removeStudent(Student student) {
-        studentDAO.removeStudent(student);
-        adapter.remove(student);
-    }
-
-    private void configAdapter(ListView listStudent) {
-        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
-        listStudent.setAdapter(adapter);
     }
 
     private void configItemClickList(ListView listStudent) {

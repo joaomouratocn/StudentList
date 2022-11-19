@@ -1,11 +1,9 @@
 <resources>
     <string name="app_name">StudentList</string>
     <string name="str_add_new_student">Add new student</string>
-    <string name="str_save_student">Save Student</string>
     <string name="str_insert_name">Insert name</string>
     <string name="str_insert_phone">Insert phone</string>
     <string name="str_insert_e_mail">Insert E-mail</string>
     <string name="str_remove">Remove</string>
-    <string name="str_test">test</string>
     <string name="str_save">save</string>
 </resources>
